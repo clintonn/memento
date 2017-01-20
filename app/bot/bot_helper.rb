@@ -8,8 +8,17 @@ Facebook::Messenger::Subscriptions.subscribe(access_token: ENV["ACCESS_TOKEN"])
 Facebook::Messenger::Thread.set({
   setting_type: 'greeting',
   greeting: {
-    text: 'Hello! Send a reminder to Memento to be reminded about anything. Try "Remind me to pick up laundry in an hour."'
+    text: 'Hello! Try setting a reminder by sending a message: "Remind me to pick up laundry in an hour." Or click start tutorial for some brief pointers.'
   },
+}, access_token: ENV['ACCESS_TOKEN'])
+
+Facebook::Messenger::Thread.set({
+  setting_type: 'call_to_actions',
+  thread_state: 'new_thread',
+  call_to_actions: [{
+    title: 'Start Tutorial',
+    payload: 'tutorial'
+  }]
 }, access_token: ENV['ACCESS_TOKEN'])
 
 # sets persistent menu that allows for postback methods (payload: METHOD) to be called
@@ -20,8 +29,8 @@ Facebook::Messenger::Thread.set({
   call_to_actions: [
     {
       type: 'postback',
-      title: 'Help',
-      payload: 'show_help'
+      title: 'Tutorial',
+      payload: 'tutorial'
     },
     {
       type: 'postback',
@@ -30,3 +39,30 @@ Facebook::Messenger::Thread.set({
     }
   ]
 }, access_token: ENV['ACCESS_TOKEN'])
+
+def bot_send(user_id, msg)
+  Bot.deliver({
+    recipient: {
+      id: user_id
+    },
+    message: {
+      text: "#{msg}"
+    }
+  }, access_token: ENV['ACCESS_TOKEN'])
+end
+
+def bot_type(user_id)
+  Bot.deliver({
+    recipient: {
+      id: user_id
+    },
+    sender_action: 'typing_on'
+  }, access_token: ENV['ACCESS_TOKEN'])
+end
+
+def format_message(str)
+  first_words = str.downcase.split[0..2].delete_if do |word|
+    ["remind", "me", "to"].include?(word)
+  end.join(" ")
+  first_words + str.split[3..-1].join(" ")
+end
