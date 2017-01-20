@@ -1,24 +1,41 @@
-# README
+# Memento
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+![memento-icon](http://i.imgur.com/Unydb1G.png?1)
 
-Things you may want to cover:
+Memento is a Facebook Messenger bot that's your personal nagger. Powered by the facebook-messenger gem.
 
-* Ruby version
+Run it on a Rails server. Deploy to Heroku. Name it whatever you want, actually. It'll nag you all the same.
 
-* System dependencies
+### Installation
 
-* Configuration
+Make sure you have Rails and Ruby installed on your local environment.
 
-* Database creation
+Navigate to the repo directory and run: `$ figaro install` to set environment variables.
 
-* Database initialization
+[Register an app](https://developers.facebook.com/) on Facebook. [Make a page](https://www.facebook.com/pages/create/) linked to it.
 
-* How to run the test suite
+On the dashboard of your Facebook app, add a Messenger product:
 
-* Services (job queues, cache servers, search engines, etc.)
+![facebook-app-dashboard](http://i.imgur.com/vsJ0RHX.png)
 
-* Deployment instructions
+Set some environment variables in the `application.yml` file Figaro touched in the `config/` directory.
 
-* ...
+You should enter an `ACCESS_TOKEN` and a `VERIFY_TOKEN`.
+
+Then set up a https:// server that can route POST requests to a specified callback URI.
+
+If you're developing locally, [ngrok](https://ngrok.com/) is an easy way to set up an https:// forwarding URL that tunnels to your local http server.
+
+Run the rails server by running `$ bundle install` and `rails s`, and in a separate terminal window, run ngrok via `$ PATH/TO/ngrok 3000`. 3000 is whatever your Rails listening port is.
+
+Back at the Facebook developer dashboard, go to your Messenger settings for your app. Set up a webhook, and select messages and messaging_postbacks.
+
+Upon receiving the POST request, the Facebook Messenger gem will fire back a subscribe response with your verify token. If all's good, you can define a success message in your `app/bot/bot.rb` file:
+
+```Ruby
+Bot.on :message do |message|
+  message.reply('Success! Got your message.')
+end
+```
+
+Which will reply to your messages with "Success!" every time you send a message.
