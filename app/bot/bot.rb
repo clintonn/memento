@@ -20,11 +20,30 @@ Bot.on :message do |message|
     nick = Nickel.parse(message.text)
     if nick.occurrences.empty?
       bot_send(@user.id, "I'll set a reminder to #{event_msg}, but can you be more specific about the date?")
-      # edit_date
     else
-      # scheduler event here
+      event_date = parse_date(nick.occurrences[0])
+      event_time = parse_time(nick.occurrences[0])
+      @event = Event.new(user_id: @user.id, message: event_msg, event_date: event_date)
+      bot_send(@user_id, "Cool, got it. When do you want to be reminded?")
     end
+  elsif !Nickel.parse(message.text).occurrences.empty?
+    # ok so this message flow has no reference :( it's supposed to be for step 4 of this process:
+    # 1. user: "Remind me to pick up a package on Friday at 12"
+    # 2. bot: ok cool how far in advance do you want to be reminded? say "2 hours" for two hours in advance
+    # 3. user: 2 hours
+    # 4. wait what event are you talking about again??????
+    # can we save an event to the database and then have a user.current_event_reference of some sort to refer back to it and then save a reminder later?
+  else
+    bot_send(@user.id, "Oops, I didn't understand that. Can we start over?")
   end
+end
+
+def parse_date(occurrence)
+  occurrence.start_date.to_date.to_s.gsub("-", "/")
+end
+
+def parse_time(occurrence)
+  occurrence.start_time.time.scan(/.{2}/).join(":")
 end
 
 def tutorial(user_id)
@@ -44,5 +63,28 @@ end
 
 
 def show_reminders(user_id)
-  puts "Showing all reminders!"
+  @user = User.find(user_id)
+  bot_send(user_id, "Here's a list of all your reminders. Click the buttons below to edit or delete them!")
+  @user.events.each_with_index do |reminder, index|
+    Bot.deliver({
+      recipient: {
+        id: user_id
+      },
+      message: {
+        text: "#{index+1}. #{reminder.text}, scheduled at #{reminder.event_date}.",
+        quick_replies: [
+          {content_type: "text",
+          title: "Edit",
+          payload: "edit_event"},
+          {content_type: "text",
+          title: "Delete",
+          payload: "delete_event"}
+        ]
+      }
+    }, access_token: ENV['ACCESS_TOKEN'])
+  end
+end
+
+def edit_event
+
 end
