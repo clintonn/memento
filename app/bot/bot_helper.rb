@@ -8,7 +8,7 @@ Facebook::Messenger::Subscriptions.subscribe(access_token: ENV["ACCESS_TOKEN"])
 Facebook::Messenger::Thread.set({
   setting_type: 'greeting',
   greeting: {
-    text: 'Hello! Try setting a reminder by sending a message: "Remind me to pick up laundry in an hour." Or click start tutorial for some brief pointers.'
+    text: 'Hello! Try setting a reminder by sending a message: "Remind me to pick up laundry in an hour." Click "get started" to get more info.'
   },
 }, access_token: ENV['ACCESS_TOKEN'])
 
@@ -16,7 +16,6 @@ Facebook::Messenger::Thread.set({
   setting_type: 'call_to_actions',
   thread_state: 'new_thread',
   call_to_actions: [{
-    title: 'Start Tutorial',
     payload: 'tutorial'
   }]
 }, access_token: ENV['ACCESS_TOKEN'])

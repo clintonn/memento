@@ -2,14 +2,11 @@ require 'bot_helper'
 # contains bot logic
 
 Bot.on :postback do |postback|
-  # to-do: refactor and find_or_create_by postback.sender_id
   @user = User.find_or_create_by(id: postback.sender['id'])
   @user.update_attributes
   case postback.payload
   when 'tutorial'
     tutorial(@user.id)
-  when 'show_help'
-    show_help(@user.id)
   when 'show_reminders'
     show_reminders(@user.id)
   end
@@ -23,6 +20,9 @@ Bot.on :message do |message|
     nick = Nickel.parse(message.text)
     if nick.occurrences.empty?
       bot_send(@user.id, "I'll set a reminder to #{event_msg}, but can you be more specific about the date?")
+      # edit_date
+    else
+      # scheduler event here
     end
   end
 end

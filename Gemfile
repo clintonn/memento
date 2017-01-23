@@ -32,6 +32,7 @@ gem 'json'
 gem 'rest-client'
 gem 'facebook-messenger'
 gem 'nickel'
+gem 'rufus-scheduler'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
