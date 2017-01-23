@@ -1,6 +1,10 @@
 require 'bot_helper'
 # contains bot logic
 
+require 'rufus-scheduler'
+scheduler = Rufus::Scheduler.new
+
+
 Bot.on :postback do |postback|
   @user = User.find_or_create_by(id: postback.sender['id'])
   @user.update_attributes
@@ -23,9 +27,11 @@ Bot.on :message do |message|
       # edit_date
     else
       # scheduler event here
+      scheduler.at nick.occurrences[0].start_date.date.split("").insert(4, "/").insert(7, "/").join("") + " " + nick.occurrences[0].start_time.time.split("").insert(2, ":").insert(5, ":").join("")
+        bot_send(@user.id, format_message(message.text))
+      end
     end
   end
-end
 
 def tutorial(user_id)
   bot_type(user_id)
