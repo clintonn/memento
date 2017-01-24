@@ -7,6 +7,7 @@ scheduler = Rufus::Scheduler.new
 Bot.on :postback do |postback|
   payload = postback.payload
   if payload == 'tutorial'
+    User.find_or_create_by(id: postback.sender["id"])
     tutorial(postback.sender["id"])
   elsif payload == 'show_reminders'
     show_reminders(postback.sender["id"])

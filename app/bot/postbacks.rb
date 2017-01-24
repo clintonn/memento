@@ -1,5 +1,4 @@
 def tutorial(user_id)
-
   bot_send(user_id, "You can send me any message like this: \"Remind me to do X in 5 hours\"")
   bot_send(user_id, "You can even use exact dates: \"Remind me to volunteer at the food shelter next Saturday.")
   bot_send(user_id, "Or: \"Remind me to rent a timeshare on May 5.\" Feel free to experiment!")
