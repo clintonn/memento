@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170124001401) do
+ActiveRecord::Schema.define(version: 20170124044651) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(version: 20170124001401) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.string   "scheduler_id"
+    t.datetime "date"
+    t.string   "time"
   end
 
   create_table "users", id: :bigserial, force: :cascade do |t|

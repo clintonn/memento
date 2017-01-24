@@ -35,11 +35,18 @@ Facebook::Messenger::Thread.set({
       type: 'postback',
       title: 'See all reminders',
       payload: 'show_reminders'
+    },
+    {
+      type: 'postback',
+      title: 'cyberbully me',
+      payload: 'cyberbully'
     }
   ]
 }, access_token: ENV['ACCESS_TOKEN'])
 
 def bot_send(user_id, msg)
+  bot_type(user_id)
+  sleep(1.5)
   Bot.deliver({
     recipient: {
       id: user_id
@@ -63,5 +70,7 @@ def format_message(str)
   first_words = str.downcase.split[0..2].delete_if do |word|
     ["remind", "me", "to"].include?(word)
   end.join(" ")
-  first_words + str.split[3..-1].join(" ")
+  out = first_words + str.split[3..-1].join(" ")
+  out[0] = out[0].capitalize
+  out
 end
