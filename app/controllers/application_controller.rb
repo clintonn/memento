@@ -5,4 +5,8 @@ class ApplicationController < ActionController::Base
 
   end
 
+  def redirect
+    redirect_to "https://github.com/clintonn/memento"
+  end
+
 end
