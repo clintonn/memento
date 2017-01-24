@@ -1,1 +1,0 @@
-s = Rufus::Scheduler.singleton
