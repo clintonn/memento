@@ -68,6 +68,11 @@ end
 
 def make_event(scheduler, user_id, message_text)
   new_event = User.find(user_id).events.last
+
+  # start_date = Nickel.parse(message_text).occurrences[0].start_date
+  # start_time = Nickel.parse(message_text).occurrences[0].start_time
+  # real_time = DateTime.parse(start_date.to_s + start_time.to_s) + (new_event.user.timezone + 5).hours
+
   event_date = parse_date(Nickel.parse(message_text).occurrences[0])
   event_time = parse_time(Nickel.parse(message_text).occurrences[0])
   new_event.update(event_date: event_date + " " + event_time, date: event_date, time: event_time)
@@ -79,6 +84,14 @@ def make_event(scheduler, user_id, message_text)
   bot_send(new_event.user.id, "Setting your reminder: #{new_event.message} at #{Time.parse(new_event.time).strftime("%l:%M %P").strip} on #{Date.parse(new_event.date.to_s).strftime("%B %e, %Y")}")
   new_event.update(scheduler_id: reminder_id)
 end
+
+# setting reminder
+# sending message of setting reminder
+# sending the reminder itself
+# london: 0 gmt
+# california: -8
+# tokyo: 9 gmt
+# us: -5 gmt
 
 def parse_date(occurrence)
   occurrence.start_date.to_date.to_s.gsub("-", "/")
