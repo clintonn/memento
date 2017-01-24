@@ -51,7 +51,7 @@ Bot.on :message do |message|
     else
       make_event(scheduler, message.sender['id'], message.text)
     end
-  elsif nick.occurrences
+  elsif !nick.occurrences.blank?
     make_event(scheduler, message.sender['id'], User.find(message.sender['id']).events.last.message + " at " + message.text)
     # bot_send(message.sender['id'], "cool")
   else
